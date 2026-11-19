@@ -1,39 +1,62 @@
 # FitFindr
 
-> ### 👋 Start here
->
-> **New to this repo? Read [RUNNING.md](RUNNING.md) first** — setup, every
-> command, and what to do when something breaks.
->
-> Once `python test.py` passes:
->
-> ```bash
-> python app.py listings --full -n 6      # read the data (Milestone 1)
-> python app.py fields                    # what you can filter on
-> python app.py ask 'vintage graphic tee under $30'
-> ```
->
-> All three tools are stubs, so that last command will do nothing useful yet.
-> That's the starting position.
->
-> **The rest of this file is your submission.** Fill it in as you go.
+A clothing discovery agent that searches a local catalog, suggests
+outfits using an example wardrobe, and generates short fit-card captions.
 
----
+Requests such as `vintage graphic tee under $30, size M` move through
+a traceable workflow: parse constraints, search listings through MCP,
+select the top match, suggest an outfit, and generate a caption.
 
-<!-- ─────────────────────────────────────────────────────────────────────────
-     HOW TO USE THIS FILE
+## Features
 
-     This is your submission. Fill each section in as you finish the milestone
-     it belongs to — don't leave it all to the end.
+- Keyword-based catalog search with optional size and price filters.
+- MCP integration for the listing-search tool.
+- Wardrobe-based outfit suggestions, with general styling advice when
+  the wardrobe is empty.
+- Fit-card captions that include the selected item's price and platform.
+- Early exit when no listings match, avoiding unnecessary model calls.
+- Execution traces and scenario-based evaluation.
 
-     Unit 3 asks for the first five sections. Unit 4 adds the five below them.
-     Leave the unit 4 sections alone until then; they're here so you know
-     what's coming.
+## How it works
 
-     Everything is pasted as TEXT. No screenshots, no images, no video links.
-     A typed block of output gets full credit; a picture of the same output
-     gets none.
-     ───────────────────────────────────────────────────────────────────────── -->
+1. Parse the request into description, size, and maximum price.
+2. Search the local catalog through MCP and rank keyword matches.
+3. Select the first matching listing.
+4. Generate outfit suggestions.
+5. Generate a short fit-card caption.
+
+Query parsing and catalog search are deterministic. Outfit suggestions
+and captions use a language model.
+
+## Run locally
+
+See [RUNNING.md](RUNNING.md) for environment setup and execution commands.
+
+Example request:
+
+```bash
+python app.py ask 'vintage graphic tee under $30, size M'
+```
+
+## Evaluation and limitations
+
+The documented evaluation checks workflow completion, early stopping,
+repeatable item selection, caption fields, and price constraints.
+
+After expanding the test scenarios, caption checks passed across
+five items with five attempts each. Price checks also passed across
+five price-limited queries with five attempts each.
+
+These results cover a small scenario set, not general recommendation
+quality. Search uses keyword matching rather than semantic retrieval,
+listings are local rather than live marketplace inventory, and combined
+price-and-size filtering needs additional test coverage.
+
+## Project origins
+
+Built for CodePath AI201 from the FitFindr starter. The sections below
+document the implemented tools, MCP integration, evaluation, AI
+assistance, and remaining limitations.
 
 <!-- ═══════════════════════ UNIT 3 — THE BUILD ═══════════════════════ -->
 
